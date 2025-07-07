@@ -69,7 +69,3 @@ RUN chmod +x /app/start.sh
 ENTRYPOINT ["/app/start.sh"]
 
 
-#!/bin/sh
-node cli.js --headless --browser chromium --no-sandbox --port ${PORT}
-
-
