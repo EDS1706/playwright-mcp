@@ -59,13 +59,16 @@ ENV NODE_ENV=production
 # Set the correct ownership for the runtime user on production `node_modules`
 RUN chown -R ${USERNAME}:${USERNAME} node_modules
 
+# … השורות הקודמות נשמרות כמו שהן
+
 USER ${USERNAME}
 
 COPY --from=browser --chown=${USERNAME}:${USERNAME} ${PLAYWRIGHT_BROWSERS_PATH} ${PLAYWRIGHT_BROWSERS_PATH}
 COPY --chown=${USERNAME}:${USERNAME} cli.js package.json ./
 COPY --from=builder --chown=${USERNAME}:${USERNAME} /app/lib /app/lib
-COPY start.sh /app/
-RUN chmod +x /app/start.sh
-ENTRYPOINT ["/app/start.sh"]
 
+# העתק + הפוך למתבצע בשלב אחד
+COPY --chown=${USERNAME}:${USERNAME} --chmod=0755 start.sh /app/start.sh
+
+ENTRYPOINT ["/app/start.sh"]
 
